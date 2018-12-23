@@ -12,5 +12,6 @@ os.environ["PATH"] += os.pathsep + LAMBDA_TASK_ROOT
 def lambda_handler(event, context):
   binary = b64decode(event['image64'])
   image = PIL.Image.open(io.BytesIO(binary))
-  text = pytesseract.image_to_string(image, config='--psm 6')
+  lang = event.get('lang', 'eng')
+  text = pytesseract.image_to_string(image, lang=lang, config='--psm 6')
   return {'text' : text}
