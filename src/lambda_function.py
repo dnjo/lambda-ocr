@@ -2,6 +2,8 @@ import pytesseract
 import os
 import boto3
 import logging
+import re
+import json
 from PIL import Image
 
 LAMBDA_TASK_ROOT = os.environ.get('LAMBDA_TASK_ROOT', os.path.dirname(os.path.abspath(__file__)))
@@ -25,5 +27,11 @@ def lambda_handler(event, context):
     object_content = s3_response_object['Body']
     text = pytesseract.image_to_string(Image.open(object_content), lang=lang, config='--psm 6')
 
-    logger.info("Image text: '%s'", text)
-    return {'text': text}
+    result = {'text': text}
+    result_key = re.sub('^(.+)/', 'results/', object_key) + '.json'
+    logger.info("Uploading result file to '%s'", result_key)
+    s3_client.put_object(Body=json.dumps(result, ensure_ascii=False).encode('utf8'),
+                         Bucket=bucket_name,
+                         Key=result_key,
+                         ContentType='application/json')
+    return result
