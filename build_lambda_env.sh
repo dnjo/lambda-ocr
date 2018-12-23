@@ -42,6 +42,7 @@ done
 #add tessdata for ocr
 mkdir $LAMBDA_DIR/tessdata
 wget https://github.com/tesseract-ocr/tessdata_best/raw/master/eng.traineddata -P $LAMBDA_DIR/tessdata
+wget https://github.com/tesseract-ocr/tessdata_best/raw/master/swe.traineddata -P $LAMBDA_DIR/tessdata
 
 # optional Orientation and script detection
 #wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/osd.traineddata -P $LAMBDA_DIR/tessdata
