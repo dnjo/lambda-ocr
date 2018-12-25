@@ -21,7 +21,7 @@ def lambda_handler(event, context):
     s3_client = boto3.client('s3')
     s3_response_object = s3_client.get_object(Bucket=bucket_name, Key=object_key)
 
-    lang = s3_response_object['Metadata'].get('lang', 'eng')
+    lang = s3_response_object.get('ContentLanguage', 'eng')
     logger.info("Using language '%s'", lang)
     object_content = s3_response_object['Body']
     text = pytesseract.image_to_string(Image.open(object_content), lang=lang, config='--psm 6')
