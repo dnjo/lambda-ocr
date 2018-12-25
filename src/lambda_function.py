@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     object_content = s3_response_object['Body']
     text = pytesseract.image_to_string(Image.open(object_content), lang=lang, config='--psm 6')
 
-    result_key = re.sub('^(.+)/', 'results/', object_key)
+    result_key = re.sub('^([^/]+)', 'results', object_key)
     logger.info("Uploading result file to '%s'", result_key)
     s3_client.put_object(Body=text,
                          Bucket=os.environ['RESULT_BUCKET'],
